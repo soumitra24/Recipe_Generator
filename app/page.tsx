@@ -283,11 +283,24 @@ export default function HomePage() {
            {/* Generate Button & Error */}
            <div className="mt-4">
             <button
-              onClick={handleGenerateRecipe} // No change needed here
+              onClick={handleGenerateRecipe}
               disabled={isGenerating || basket.length === 0}
-              className="w-full bg-[#6552FF] text-white font-semibold py-2.5 px-4 rounded-md hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-200"
+              // Flexbox classes remain the same
+              className="w-full flex items-center justify-center bg-[#6552FF] text-white font-semibold py-2.5 px-4 rounded-md hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 min-h-[44px]" // Added min-height to prevent layout shift
             >
-              {isGenerating ? 'Generating Recipe...' : 'Generate Recipe'}
+              {isGenerating ? (
+                <div className="flex items-center space-x-2">
+                  {/* Fancy Three Dots Loader */}
+                  <span className="text-sm font-medium">Generating</span>
+                  <div className="flex space-x-1">
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse animation-delay-0"></div>
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse animation-delay-150"></div>
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse animation-delay-300"></div>
+                  </div>
+                </div>
+              ) : (
+                'Generate Recipe'
+              )}
             </button>
             {/* Display error messages */}
             {error && <p className="text-red-500 mt-2 text-sm text-center">{error}</p>}
