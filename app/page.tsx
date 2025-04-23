@@ -128,10 +128,20 @@ export default function HomePage() {
       setRecipeHistory(prevHistory => [newRecipe, ...prevHistory]);
       setBasket([]); // Clear basket after successful generation
 
-    } catch (error: any) {
-      console.error("Failed to generate recipe:", error);
-      setError(error.message || 'An unexpected error occurred while generating the recipe.');
-    } finally {
+    } catch (error: unknown) { // Changed from any to unknown
+            console.error("Failed to generate recipe:", error);
+      
+            // Safely access the error message
+            let errorMessage = 'An unexpected error occurred while generating the recipe.';
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            } else if (typeof error === 'string') {
+                // Sometimes errors are thrown as strings
+                errorMessage = error;
+            }
+      
+            setError(errorMessage);
+          } finally {
       setIsGenerating(false); // Stop loading indicator regardless of success/failure
     }
   };

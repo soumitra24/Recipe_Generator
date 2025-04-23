@@ -101,9 +101,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ recipeText });
   
 
-  } catch (error: any) {
-    console.error("Error calling Gemini API:", error);
-    // Provide a more generic error message to the client
-    return NextResponse.json({ error: `Failed to generate recipe. ${error.message || 'Unknown error'}` }, { status: 500 });
-  }
+  } catch (error: unknown) { // Changed from any to unknown
+        console.error("Error calling Gemini API:", error);
+        // Provide a more generic error message to the client
+    
+        // Safely access error properties by checking the type
+        let errorMessage = 'Unknown error';
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        } else if (typeof error === 'string') {
+            errorMessage = error;
+        }
+    
+        return NextResponse.json({ error: `Failed to generate recipe. ${errorMessage}` }, { status: 500 });
+      }
 }
